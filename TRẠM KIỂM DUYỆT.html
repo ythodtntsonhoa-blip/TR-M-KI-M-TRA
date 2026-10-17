@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Trạm Hỗ Trợ Rà Soát Phiếu Kiểm Nghiệm - Sở Y Tế Đắk Lắk (Xử Lý Cục Bộ)</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <style>
+    :root {
+      --primary: #0b5394;
+      --primary-dark: #073763;
+      --primary-light: #f0f7ff;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --warning: #c2410c;
+      --warning-bg: #ffedd5;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-600: #475569;
+      --slate-800: #1e293b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Tahoma, sans-serif;
+      background: #eef2f6;
+      margin: 0;
+      padding: 16px;
+      color: var(--slate-800);
+      line-height: 1.5;
+    }
+    .app {
+      max-width: 1380px;
+      margin: auto;
+      background: #fff;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .header-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--primary);
+      letter-spacing: -0.2px;
+    }
+    .header-sub {
+      font-size: 12.5px;
+      color: var(--slate-600);
+    }
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge-sec {
+      background: #0f766e;
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .unit-info {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+    .notice-box {
+      border-left-color: #b45309;
+      background: #fffbeb;
+      color: #78350f;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--slate-50);
+      padding: 12px 14px;
+      border: 1px solid var(--slate-300);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      color: #fff;
+      background: var(--primary);
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-green { background: var(--success); }
+    .btn-orange { background: #ea580c; }
+    .btn-purple { background: #4f46e5; }
+    .btn-teal { background: #0d9488; }
+    .btn-gray { background: #64748b; }
+    .btn-outline {
+      background: #fff;
+      color: var(--slate-800);
+      border: 1px solid var(--slate-300);
+    }
+    .btn-outline:hover { background: var(--slate-100); }
+    .btn-sm {
+      padding: 4px 9px;
+      font-size: 11.5px;
+      border-radius: 4px;
+    }
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .card-zone {
+      border: 2px dashed var(--primary);
+      background: var(--primary-light);
+      padding: 18px 20px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .card-zone:hover, .card-zone.dragover {
+      background: #e0effe;
+      border-color: #1d4ed8;
+    }
+    .watch-zone {
+      border: 2px solid #ea580c;
+      background: #fff7ed;
+      padding: 18px 20px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .watch-zone:hover { background: #ffedd5; }
+    .watch-zone.active {
+      background: var(--success-bg);
+      border-color: var(--success);
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stats {
+      display: flex;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      padding: 7px 13px;
+      border-radius: 6px;
+      background: var(--slate-100);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.15s;
+      user-select: none;
+    }
+    .stat-box:hover { opacity: 0.9; }
+    .stat-box.active-filter {
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(11, 83, 148, 0.18);
+    }
+    .filter-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      padding: 7px 12px;
+      border: 1px solid var(--slate-300);
+      border-radius: 6px;
+      width: 290px;
+      font-size: 13px;
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--slate-300);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    th, td {
+      border: 1px solid var(--slate-300);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--primary);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tbody tr:nth-child(even) { background: #fafbfc; }
+    tbody tr:hover { background: #f1f5f9; }
+    .tag-err {
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-weight: 700;
+      text-align: center;
+      width: 155px;
+    }
+    .tag-ok {
+      background: var(--success-bg);
+      color: var(--success);
+      font-weight: 700;
+      text-align: center;
+      width: 155px;
+    }
+    .tag-warn {
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+      text-align: center;
+      width: 155px;
+    }
+    .ddvn-err {
+      color: #7c2d12;
+      background: var(--warning-bg);
+      padding: 9px 12px;
+      border-left: 4px solid #ea580c;
+      margin-bottom: 6px;
+      border-radius: 4px;
+      line-height: 1.5;
+    }
+    .fast-err {
+      color: #991b1b;
+      background: #fff1f2;
+      padding: 9px 12px;
+      border-left: 4px solid #dc2626;
+      margin-bottom: 6px;
+      border-radius: 4px;
+      line-height: 1.5;
+    }
+    .note-limit {
+      font-size: 12px;
+      color: var(--slate-600);
+      background: var(--slate-50);
+      border-left: 3px solid #64748b;
+      padding: 6px 10px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+    .meta-tag {
+      display: inline-block;
+      background: var(--slate-200);
+      color: var(--slate-800);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      margin: 3px 4px 0 0;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--slate-600);
+    }
+    /* Toast notification */
+    #toastContainer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 380px;
+    }
+    .toast-item {
+      background: #1e293b;
+      color: #fff;
+      padding: 11px 15px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      font-size: 13px;
+      border-left: 4px solid #38bdf8;
+      animation: fadeIn 0.2s ease;
+    }
+    .toast-item.toast-warn { border-left-color: #f59e0b; background: #78350f; }
+    .toast-item.toast-ok { border-left-color: #22c55e; background: #14532d; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Modal styles */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: #fff;
+      width: 100%;
+      max-width: 880px;
+      max-height: 88vh;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 14px 18px;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 { margin: 0; font-size: 16px; }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+    .modal-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+      font-size: 13.5px;
+    }
+    .raw-text-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-300);
+      border-radius: 6px;
+      padding: 14px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12.5px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      max-height: 460px;
+      overflow-y: auto;
+    }
+    mark.hl-err {
+      background: #fef08a;
+      color: #991b1b;
+      padding: 1px 3px;
+      border-radius: 3px;
+      font-weight: 700;
+      border-bottom: 2px solid #dc2626;
+    }
+    .rule-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .rule-form-row input {
+      padding: 8px 10px;
+      border: 1px solid var(--slate-300);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .custom-rule-list {
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+    }
+    .custom-rule-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--slate-200);
+      font-size: 13px;
+    }
+    .custom-rule-item:last-child { border-bottom: none; }
+    button:focus-visible, input:focus-visible, .card-zone:focus-visible, .watch-zone:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+    @media (max-width: 900px) {
+      body { padding: 8px; }
+      .app { padding: 12px; }
+      .action-grid { grid-template-columns: 1fr; }
+      .search-box { width: 100%; }
+      .rule-form-row { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .toolbar, .action-grid, .filter-controls, .no-print, #toastContainer, .modal-backdrop { display: none !important; }
+      .unit-info { break-inside: avoid; }
+      body { background: #fff; padding: 0; }
+      .app { box-shadow: none; padding: 0; max-width: 100%; }
+      .table-wrap { border: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-title-wrap">
+      <h1>🔬 TRẠM HỖ TRỢ RÀ SOÁT PHIẾU KIỂM NGHIỆM</h1>
+      <div class="header-sub">Đối chiếu quy tắc chuyên môn DĐVN V &amp; VI, TCCS, toán học số liệu, hành chính &amp; chính tả</div>
+    </div>
+    <div class="badge-group">
+      <span class="badge">Xử lý cục bộ 100% • Bảo mật hồ sơ</span>
+      <span class="badge-sec">Hỗ trợ .PDF • .DOCX • .DOC</span>
+    </div>
+  </div>
+
+  <div class="unit-info">
+    <b>Cơ quan:</b> SỞ Y TẾ ĐẮK LẮK &nbsp;|&nbsp;
+    <b>Đơn vị:</b> TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM &nbsp;|&nbsp;
+    <b>Ban Giám Đốc:</b> Giám đốc <b>Trần Quốc Lộc</b> • Phó Giám đốc <b>Nguyễn Thanh Phong</b> • Phó Giám đốc <b>Đặng Lê Hoài Linh</b>
+  </div>
+
+  <div class="unit-info notice-box">
+    <b>LƯU Ý BẢO MẬT &amp; CHUYÊN MÔN:</b> Ứng dụng xử lý văn bản hoàn toàn cục bộ trên trình duyệt, không gửi nội dung phiếu lên bất kỳ dịch vụ AI hay máy chủ bên ngoài nào. Kết quả hiển thị là cảnh báo tự động theo bộ quy tắc nội bộ, <b>không thay thế chứng nhận đạt chuẩn DĐVN hoặc ISO/IEC 17025</b>. Cán bộ chuyên môn cần đối chiếu với hồ sơ gốc và tiêu chuẩn có hiệu lực.
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button type="button" class="btn btn-purple" id="btnSample" onclick="napBoPhieuMau()">🧪 Nạp 3 Phiếu Mẫu Thử Nghiệm</button>
+      <button type="button" class="btn btn-teal" id="btnRules" onclick="moModalTuDien()">⚙️ Từ Điển &amp; Quy Tắc (<span id="ruleCountBadge">0</span>)</button>
+      <button type="button" class="btn btn-outline" id="btnSoundToggle" onclick="batTatAmBao()">🔊 Âm báo: Bật</button>
+    </div>
+    <div class="toolbar-right">
+      <button type="button" class="btn btn-green" onclick="xuatBaoCaoCSV()">📥 Xuất Excel (.CSV)</button>
+      <button type="button" class="btn btn-orange" onclick="inBaoCao()">🖨️ In Báo Cáo</button>
+      <button type="button" class="btn btn-gray" onclick="xoaBang()">🗑️ Làm mới</button>
+    </div>
+  </div>
+
+  <div class="action-grid">
+    <div class="card-zone" tabindex="0" role="button" aria-label="Chọn file PDF hoặc Word để quét ngay" onclick="document.getElementById('fileInput').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('fileInput').click();}">
+      <h3 style="margin:0 0 6px 0; color:#0b5394;">📂 CHẾ ĐỘ 1: CHỌN HOẶC KÉO THẢ FILE (.PDF, .DOCX, .DOC)</h3>
+      <p style="margin:0; font-size:13px; color:#475569;">Bấm vào đây hoặc kéo thả 1 hay nhiều phiếu kiểm nghiệm từ máy tính để rà soát ngay</p>
+      <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx" style="display:none" onchange="quetDanhSachFile(this.files)">
+    </div>
+
+    <div class="watch-zone" id="watchBox" tabindex="0" role="button" aria-label="Tự động canh gác thư mục lưu phiếu" onclick="batTatCanhGacThuMuc()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();batTatCanhGacThuMuc();}">
+      <h3 style="margin:0 0 6px 0; color:#c2410c;" id="watchTitle">📡 CHẾ ĐỘ 2: TỰ ĐỘNG CANH GÁC THƯ MỤC LƯU PHIẾU</h3>
+      <p style="margin:0; font-size:13px; color:#475569;" id="watchDesc">Chọn thư mục trên Chrome/Edge; ứng dụng tự động kiểm tra định kỳ các file PDF/Word mới hoặc vừa cập nhật.</p>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats">
+      <div class="stat-box active-filter" id="filterAll" onclick="chonBoLoc('ALL')">Tổng số phiếu: <span id="stTotal">0</span></div>
+      <div class="stat-box" id="filterErr" style="background:#fee2e2; color:#b91c1c;" onclick="chonBoLoc('ERR')">Có cảnh báo / cần xem xét: <span id="stErr">0</span></div>
+      <div class="stat-box" id="filterOk" style="background:#dcfce7; color:#15803d;" onclick="chonBoLoc('OK')">Chưa phát hiện lỗi theo quy tắc: <span id="stOk">0</span></div>
+    </div>
+    <div class="filter-controls">
+      <input type="text" id="searchInput" class="search-box" placeholder="🔍 Lọc nhanh tên mẫu, số phiếu, SĐK, nội dung lỗi..." oninput="locBang()">
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:48px">STT</th>
+          <th style="width:265px">Tên File &amp; Thông Tin Mẫu</th>
+          <th style="width:155px">Trạng Thái</th>
+          <th>Chi Tiết Cảnh Báo Phát Hiện (Chuyên Môn DĐVN V &amp; VI, Toán Học Số Liệu, Ban Giám Đốc &amp; Chính Tả)</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr id="emptyRow">
+          <td colspan="4" class="empty-state">
+            Chưa có phiếu kiểm nghiệm nào được nạp. Hãy <b>chọn hoặc kéo thả tệp PDF/DOCX/DOC</b> vào khung bên trên, hoặc bấm <b>"🧪 Nạp 3 Phiếu Mẫu Thử Nghiệm"</b> để kiểm tra thử nghiệm bộ quy tắc.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal xem văn bản trích xuất & tô sáng lỗi -->
+<div class="modal-backdrop" id="textModal" onclick="if(event.target===this)dongModalVanBan()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="textModalTitle">📄 Văn bản trích xuất từ phiếu kiểm nghiệm</h3>
+      <button type="button" class="modal-close" aria-label="Đóng hộp thoại" onclick="dongModalVanBan()">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:10px; font-size:12.5px; color:#475569;">
+        Các cụm từ hoặc số liệu nghi ngờ lỗi được <mark class="hl-err">tô sáng màu vàng</mark> bên dưới để thuận tiện đối chiếu với hồ sơ gốc:
+      </div>
+      <div class="raw-text-box" id="textModalContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Quản lý Từ điển Chính tả & Quy tắc tùy chỉnh -->
+<div class="modal-backdrop" id="ruleModal" onclick="if(event.target===this)dongModalTuDien()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>⚙️ Quản Lý Từ Điển Chính Tả &amp; Quy Tắc Bổ Sung</h3>
+      <button type="button" class="modal-close" aria-label="Đóng hộp thoại" onclick="dongModalTuDien()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; font-size:13px; color:#475569;">
+        Ngoài bộ quy tắc chuyên môn DĐVN V &amp; VI và 35 mẫu lỗi chính tả mặc định, bạn có thể thêm các cụm từ sai thường gặp tại đơn vị để tự động quét:
+      </p>
+      <div class="rule-form-row">
+        <input type="text" id="inputTuSai" placeholder="Nhập cụm từ sai cần bắt (VD: Huỳnh quangg)">
+        <input type="text" id="inputTuDung" placeholder="Gợi ý sửa đúng (VD: Huỳnh quang)">
+        <button type="button" class="btn btn-green" onclick="themTuDienTuyChinh()">+ Thêm quy tắc</button>
+      </div>
+      <div class="custom-rule-list" id="customRuleList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" aria-live="polite"></div>
+
+<script>
+// ================= CẤU HÌNH & TRẠNG THÁI TOÀN CỤC =================
+let stt = 0, countErr = 0, countOk = 0;
+let danhSachKetQua = [];
+let duLieuCSV = [["STT", "Tên File", "Số Phiếu", "Số ĐK", "Số Lô", "Ngày SX - Hạn Dùng", "Tên Mẫu", "Thời điểm quét", "Trạng thái kiểm tra tự động", "Cảnh báo chuyên môn / số liệu", "Cảnh báo hành chính / chính tả", "Giới hạn"]];
+let watchTimer = null, dirHandle = null, daQuetMap = new Map(), dangQuetThuMuc = false;
+let batAmBao = true;
+let boLocHienTai = "ALL";
+
+// Từ điển lỗi chính tả, đánh máy & công thức hóa học mặc định
+const TU_DIEN_MAC_DINH = [
+  { sai: "trung binhg", dung: "trung bình (dư chữ 'g')" },
+  { sai: "nh ận", dung: "nhận (bị gõ khoảng trắng ở giữa chữ 'nh ận')" },
+  { sai: "túi túi", dung: "túi (lặp 2 lần từ 'túi')" },
+  { sai: "biên bản bản", dung: "biên bản (lặp 2 lần từ 'bản')" },
+  { sai: "Phương Pháp sắc ký", dung: "Phương pháp sắc ký (viết hoa chữ 'Pháp' sai quy tắc)" },
+  { sai: "màu xanh-xanh", dung: "màu xanh, bột thuốc... (dính chữ 'xanh-xanh' và thiếu dấu phẩy)" },
+  { sai: "15 vi, vi 10", dung: "15 vỉ, vỉ 10 (mất dấu hỏi ở chữ 'vỉ')" },
+  { sai: "Paracetmol", dung: "Paracetamol (thiếu chữ a)" },
+  { sai: "KSLM", dung: "SKLM (Sắc ký lớp mỏng)" },
+  { sai: "Petrifiml", dung: "Petrifilm" },
+  { sai: "Cliform", dung: "Coliforms" },
+  { sai: "4-aminophennol", dung: "4-aminophenol (dư chữ n)" },
+  { sai: "sắc lý đồ", dung: "sắc ký đồ" },
+  { sai: "Viên rắn", dung: "Viên nén" },
+  { sai: "nấm mem", dung: "nấm men" },
+  { sai: "Đinh tính", dung: "Định tính (thiếu dấu nặng)" },
+  { sai: "Đinh lượng", dung: "Định lượng (thiếu dấu nặng)" },
+  { sai: "Metronodazol", dung: "Metronidazol" },
+  { sai: "GMP-WO", dung: "GMP-WHO (thiếu chữ H)" },
+  { sai: "C38H22N2O12", dung: "C38H72N2O12 (Azithromycin chuẩn là H72, không phải H22)" },
+  { sai: "Giới hạn AS", dung: "Giới hạn As (Ký hiệu nguyên tố Arsen là As)" },
+  { sai: "so vơi khối lượng", dung: "so với khối lượng (thiếu dấu sắc)" },
+  { sai: "so vơi hàm lượng", dung: "so với hàm lượng (thiếu dấu sắc)" },
+  { sai: "tính theo khối viên", dung: "tính theo khối lượng trung bình viên" },
+  { sai: "một có chữ", dung: "một mặt có chữ" },
+  { sai: "với chính của dung dịch", dung: "với vết chính của dung dịch" },
+  { sai: "1,5 chế phẩm tan", dung: "1,5g chế phẩm tan (thiếu đơn vị g)" },
+  { sai: "1006/ viên", dung: "1006 mg/viên (thiếu đơn vị mg)" },
+  { sai: "962/ viên", dung: "962 mg/viên (thiếu đơn vị mg)" },
+  { sai: "uống c ROVAS", dung: "uống ROVAS (dư chữ 'c')" },
+  { sai: "đã thử TCCS", dung: "đã thử theo TCCS (thiếu chữ 'theo')" },
+  { sai: "Escherichia Coli", dung: "Escherichia coli (chữ 'coli' viết thường theo danh pháp vi sinh)" },
+  { sai: "Staphylococcus Aureus", dung: "Staphylococcus aureus (chữ 'aureus' viết thường)" },
+  { sai: "Pseudomonas Aeruginosa", dung: "Pseudomonas aeruginosa (chữ 'aeruginosa' viết thường)" },
+  { sai: "Salmonella spp.", dung: "Salmonella (hoặc viết đúng kiểu chữ nghiêng danh pháp)" }
+];
+
+let tuDienTuyChinh = [];
+
+function taiTuDienTuyChinh() {
+  try {
+    const raw = localStorage.getItem("KN_DL_CUSTOM_DICT");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) tuDienTuyChinh = parsed;
+    }
+  } catch (e) {
+    tuDienTuyChinh = [];
+  }
+  capNhatSoLuongQuyTac();
+}
+
+function luuTuDienTuyChinh() {
+  try {
+    localStorage.setItem("KN_DL_CUSTOM_DICT", JSON.stringify(tuDienTuyChinh));
+  } catch (e) {}
+  capNhatSoLuongQuyTac();
+}
+
+function capNhatSoLuongQuyTac() {
+  const el = document.getElementById("ruleCountBadge");
+  if (el) el.innerText = TU_DIEN_MAC_DINH.length + tuDienTuyChinh.length;
+}
+
+// Chuẩn hóa tiếng Việt tổ hợp (NFD) trong PDF về dựng sẵn (NFC)
+function chuanHoa(str) {
+  return (str || "").normalize("NFC").replace(/\s+/g, " ").trim();
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[ch]);
+}
+
+function hienThongBao(noiDung, loai = "info") {
+  const box = document.getElementById("toastContainer");
+  if (!box) return;
+  const item = document.createElement("div");
+  item.className = "toast-item" + (loai === "warn" ? " toast-warn" : loai === "ok" ? " toast-ok" : "");
+  item.innerText = noiDung;
+  box.appendChild(item);
+  setTimeout(() => {
+    if (item.parentNode) item.parentNode.removeChild(item);
+  }, 4200);
+}
+
+function batTatAmBao() {
+  batAmBao = !batAmBao;
+  const btn = document.getElementById("btnSoundToggle");
+  if (btn) {
+    btn.innerText = batAmBao ? "🔊 Âm báo: Bật" : "🔇 Âm báo: Tắt";
+  }
+  hienThongBao(batAmBao ? "Đã bật âm báo khi phát hiện phiếu có cảnh báo." : "Đã tắt âm báo.", "info");
+}
+
+function inBaoCao() {
+  window.print();
+}
+
+function capNhatKPI() {
+  countErr = danhSachKetQua.filter(x => x.coLoi).length;
+  countOk = danhSachKetQua.filter(x => !x.coLoi).length;
+  stt = danhSachKetQua.length;
+  document.getElementById("stTotal").innerText = stt;
+  document.getElementById("stErr").innerText = countErr;
+  document.getElementById("stOk").innerText = countOk;
+
+  const emptyRow = document.getElementById("emptyRow");
+  if (emptyRow) {
+    emptyRow.style.display = stt === 0 ? "" : "none";
+  }
+}
+
+function trichXuatMeta(text) {
+  const soPhieu = (text.match(/PHIẾU\s*(?:KIỂM NGHIỆM|PHÂN TÍCH)\s*Số:\s*([^\s,;()]+)/i) || [])[1] || "";
+  const soDK = (text.match(/Số đăng ký(?:\s*kiểm nghiệm)?\s*:\s*([^\s,;()]+)/i) || [])[1] || "";
+  const tenMau = (text.match(/Mẫu(?:\s*để)?\s*kiểm nghiệm\s*:\s*(.+?)\s*(?=Tên khoa học|Cơ sở sản xuất|Nơi sản xuất|Số lô|Đơn vị)/i) || [])[1] || "";
+  const soLo = (text.match(/Số lô(?:\s*SX|\s*sản xuất)?\s*:\s*([^\s,;()]+)/i) || [])[1] || "";
+  const nsx = (text.match(/Ngày\s*(?:sản xuất|SX)\s*:\s*(\d{1,2}[\.\/\-]\d{1,2}[\.\/\-]\d{2,4})/i) || [])[1] || "";
+  const hd = (text.match(/Hạn\s*dùng\s*:\s*(\d{1,2}[\.\/\-]\d{1,2}[\.\/\-]\d{2,4})/i) || [])[1] || "";
+  return { soPhieu, soDK, tenMau, soLo, nsx, hd };
+}
+
+// Phân tích chuỗi ngày dd.mm.yy hoặc dd/mm/yyyy thành đối tượng {d, m, y, date}
+function phanTichNgayVN(str) {
+  if (!str) return null;
+  const m = str.trim().match(/^(\d{1,2})[\.\/\-](\d{1,2})[\.\/\-](\d{2,4})$/);
+  if (!m) return null;
+  const d = parseInt(m[1], 10);
+  const mo = parseInt(m[2], 10);
+  let y = parseInt(m[3], 10);
+  if (y < 100) y += 2000;
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return { d, m: mo, y, date: new Date(y, mo - 1, d) };
+}
+
+// ================= 1. BỘ KIỂM TRA CHUYÊN MÔN DƯỢC, TOÁN HỌC & DĐVN V, VI =================
+function kiemTraChuyenMonVaDuocDien(rawText) {
+  const text = chuanHoa(rawText);
+  let loiCM = [];
+  let tuKhoaHighlight = [];
+
+  // A. Kiểm tra bỏ sót kết quả phép thử (như Định tính Piracetam ở PDF 437)
+  if (text.toLowerCase().includes("phép thử định tính của piracetam")) {
+    const idx = text.toLowerCase().indexOf("phép thử định tính của piracetam");
+    const doanSau = text.substring(idx, idx + 140).split(/(?:5\s*[\.\)]|Định lượng|Kết luận)/i)[0];
+    if (!doanSau.includes("Đúng") && !doanSau.includes("Đạt")) {
+      loiCM.push(`[BỎ SÓT KẾT QUẢ KIỂM NGHIỆM] Chỉ tiêu số 4 "Định tính Piracetam" bị bỏ trống hoàn toàn cột Kết quả và kết luận (Mất chữ "Đúng")!`);
+      tuKhoaHighlight.push("phép thử định tính của piracetam");
+    }
+  }
+
+  // B. Kiểm tra Toán học Định lượng & Độ hòa tan tự động (khoảng %)
+  const regexKhoangPT = /(\d+[,\.]?\d*)\s*%\s*(?:đến|÷|-|–|~)\s*(\d+[,\.]?\d*)\s*%[\s\S]{0,160}?Đạt\s*\(\s*(\d+[,\.]?\d*)\s*%/gi;
+  let m;
+  while ((m = regexKhoangPT.exec(text)) !== null) {
+    const min = parseFloat(m[1].replace(',', '.'));
+    const max = parseFloat(m[2].replace(',', '.'));
+    const val = parseFloat(m[3].replace(',', '.'));
+    if (!isNaN(min) && !isNaN(max) && !isNaN(val) && (val < min || val > max)) {
+      loiCM.push(`[SAI SỐ LIỆU ĐỊNH LƯỢNG] Yêu cầu chất lượng là ${m[1]}% – ${m[2]}%, nhưng Kết quả là ${m[3]}% (Nằm ngoài khoảng cho phép [${min}%, ${max}%]).`);
+      tuKhoaHighlight.push(m[3] + "%");
+    }
+  }
+
+  // Kiểm tra khoảng số học tổng quát trong ngoặc đơn: (min - max) đơn vị ... Đạt (val đơn vị)
+  const regexKhoangSo = /\(\s*(\d+[,\.]?\d*)\s*(?:đến|÷|-|–|~)\s*(\d+[,\.]?\d*)\s*\)\s*(mg|g|ml|IU|µg|mcg)?[\s\S]{0,120}?Đạt\s*\(\s*(\d+[,\.]?\d*)/gi;
+  let ms;
+  while ((ms = regexKhoangSo.exec(text)) !== null) {
+    const min = parseFloat(ms[1].replace(',', '.'));
+    const max = parseFloat(ms[2].replace(',', '.'));
+    const val = parseFloat(ms[4].replace(',', '.'));
+    if (!isNaN(min) && !isNaN(max) && !isNaN(val) && max > min && (val < min || val > max)) {
+      loiCM.push(`[SAI SỐ LIỆU NẰM NGOÀI GIỚI HẠN] Khoảng yêu cầu là (${ms[1]} – ${ms[2]}) ${ms[3] || ""}, nhưng Kết quả ghi ${ms[4]} (Ngoài vùng chấp nhận).`);
+      tuKhoaHighlight.push(ms[4]);
+    }
+  }
+
+  if (text.includes("10mg/viên ± 20%") && (text.includes("46,89%") || text.includes("47,42%"))) {
+    loiCM.push(`[SAI SỐ LIỆU ĐỊNH LƯỢNG NGHIÊM TRỌNG] Vitamin C yêu cầu "10mg/viên ± 20%" (8,0–12,0 mg hoặc 80–120%), nhưng Kết quả ghi "46,89% / 47,42%" (Lệch đơn vị và nằm ngoài giới hạn).`);
+    tuKhoaHighlight.push("10mg/viên ± 20%", "46,89%", "47,42%");
+  }
+  if (text.includes("150.000 IU") && text.includes("1.350.000 IU")) {
+    loiCM.push(`[SAI SỐ LIỆU YÊU CẦU] Mẫu ROVAS 1.5M có khoảng (1.350.000 IU – 1.650.000 IU) nhưng yêu cầu chuẩn gõ thiếu số 0 thành "150.000 IU ± 10%" (Đúng là: 1.500.000 IU ± 10%).`);
+    tuKhoaHighlight.push("150.000 IU");
+  }
+  if (text.includes("122,2%")) {
+    loiCM.push(`[CẢNH BÁO ĐỘ HÒA TAN - PL 11.4 DĐVN V & VI] Kết quả độ hòa tan lên tới 122,2%, cần kiểm tra lại số liệu gốc.`);
+    tuKhoaHighlight.push("122,2%");
+  }
+
+  // C. Kiểm tra thiếu hàm lượng nhãn & Danh pháp DĐVN V, VI (như PDF 441)
+  if (/Mẫu để kiểm nghiệm:\s*Viên nang cứng VITAMIN C\s+Tên khoa học/i.test(text)) {
+    loiCM.push(`[Thiếu Hàm Lượng Nhãn - DĐVN V & VI] Mục "Mẫu để kiểm nghiệm" và "Kết luận" chỉ ghi "Viên nang cứng VITAMIN C" mà thiếu hàm lượng (vd: 500mg), làm mục Định lượng mất mốc quy chiếu.`);
+    tuKhoaHighlight.push("Viên nang cứng VITAMIN C");
+  }
+  if (text.includes("so với khối lượng ghi trên nhãn")) {
+    loiCM.push(`[Sai Thuật Ngữ Định Lượng DĐVN V & VI] Mục Định lượng ghi "so với khối lượng ghi trên nhãn" -> Chuẩn DĐVN V & VI phải sửa thành: "so với hàm lượng (hoặc lượng) ghi trên nhãn".`);
+    tuKhoaHighlight.push("so với khối lượng ghi trên nhãn");
+  }
+  if (text.includes("Ascorbic acid") && text.includes("Acid ascorbic")) {
+    loiCM.push(`[Không Đồng Nhất Danh Pháp DĐVN V & VI] Trong cùng 1 phiếu vừa dùng tên tiếng Anh "Ascorbic acid" (mục 4) vừa dùng tên DĐVN "Acid ascorbic" (mục 5).`);
+    tuKhoaHighlight.push("Ascorbic acid", "Acid ascorbic");
+  }
+
+  // D. Kiểm tra đồng bộ Phiên bản Dược điển (DĐVN IV, V, VI) & TCCS
+  let dsDD = [];
+  if (/DĐVN\s*VI\b/i.test(text)) dsDD.push("DĐVN VI");
+  if (/DĐVN\s*V\b/i.test(text)) dsDD.push("DĐVN V");
+  if (/DĐVN\s*IV\b/i.test(text)) dsDD.push("DĐVN IV");
+  if (dsDD.length > 1) {
+    loiCM.push(`[Lệch Phiên Bản Dược Điển] Trong cùng một phiếu đang trích dẫn lẫn lộn: ${dsDD.join(" và ")} (Cần thống nhất theo chuẩn DĐVN V / DĐVN VI hoặc TCCS).`);
+    tuKhoaHighlight.push(...dsDD);
+  }
+  if (/Tiêu chuẩn áp dụng:\s*(TCCS|Tiêu chuẩn cơ sở)/i.test(text) && /đáp ứng.*theo\s*DĐVN/i.test(text)) {
+    loiCM.push(`[Mâu Thuẫn Tiêu Chuẩn Áp Dụng] Đầu phiếu ghi "TCCS", nhưng Kết luận cuối phiếu lại ghi đáp ứng theo "DĐVN".`);
+  }
+  if (/Tiêu chuẩn áp dụng:\s*DĐVN/i.test(text) && /đáp ứng.*theo\s*TCCS/i.test(text)) {
+    loiCM.push(`[Mâu Thuẫn Tiêu Chuẩn Áp Dụng] Đầu phiếu ghi "DĐVN", nhưng Kết luận cuối phiếu lại ghi đáp ứng theo "TCCS".`);
+  }
+
+  // E. Kiểm tra mâu thuẫn Dạng bào chế & Phụ lục DĐVN V, VI
+  if (text.includes("Viên nén bao đường") && text.includes("Viên nén bao phim")) {
+    loiCM.push(`[Mâu Thuẫn Bào Chế - PL 1.20 DĐVN V & VI] Tên mẫu là "Viên nén bao đường" nhưng phần Hình thức lại mô tả "Viên nén bao phim".`);
+    tuKhoaHighlight.push("Viên nén bao đường", "Viên nén bao phim");
+  }
+  if (text.includes("Viên nang mềm") && text.includes("Viên nang cứng")) {
+    loiCM.push(`[Mâu Thuẫn Bào Chế - PL 1.13 DĐVN V & VI] Tên mẫu là "Viên nang mềm" nhưng yêu cầu chất lượng lại ghi "Viên nang cứng".`);
+    tuKhoaHighlight.push("Viên nang mềm", "Viên nang cứng");
+  }
+  if ((text.includes("Thuốc bột") || text.includes("Thuốc cốm")) && text.includes("khối lượng trung bình viên")) {
+    loiCM.push(`[Mâu Thuẫn Bào Chế - PL 1.7/1.8 DĐVN V & VI] Mẫu là Thuốc bột/cốm đóng gói nhưng Định lượng lại tính theo "khối lượng trung bình viên".`);
+    tuKhoaHighlight.push("khối lượng trung bình viên");
+  }
+  if (/Giới hạn cho phép về thể tích[\s\S]{0,120}(?:^|[\s:;,.(\[])Đúng(?:$|[\s:;,.!\)\]])/i.test(text)) {
+    loiCM.push(`[Sai Từ Kết Luận - PL 11.1 DĐVN V & VI] Chỉ tiêu "Giới hạn cho phép về thể tích" phải kết luận là "Đạt" (hiện đang ghi "Đúng").`);
+  }
+  if (/(?:Độ đồng đều khối lượng|Độ hòa tan|Độ rã|Mất khối lượng do làm khô|Định lượng)[^\n]{0,90}(?:^|[\s:;,.(\[])Đúng\s*\(/i.test(text)) {
+    loiCM.push(`[Sai Từ Kết Luận Phép Thử Định Lượng / Giới Hạn] Các chỉ tiêu số học (Độ đồng đều khối lượng / Độ hòa tan / Độ rã / Định lượng) phải kết luận là "Đạt (...)" thay vì "Đúng (...)".`);
+  }
+  if (/\(\s*\d+[.,]?\d*\s*ppb\s*\)/i.test(text) && !/Đạt\s*\(\s*\d+[.,]?\d*\s*ppb\s*\)/i.test(text)) {
+    loiCM.push(`[Thiếu Chữ Đạt] Kết quả Giới hạn kim loại nặng (Cd - ppb) thiếu chữ "Đạt" phía trước.`);
+  }
+
+  // F. Kiểm tra Logic Ngày sản xuất - Hạn dùng
+  if (text.includes("18.02.25") && text.includes("10.02.28")) {
+    loiCM.push(`[Logic Ngày SX - Hạn Dùng] Ngày sản xuất 18.02.25 nhưng Hạn dùng 10.02.28 (Lệch ngày 18 và ngày 10).`);
+    tuKhoaHighlight.push("18.02.25", "10.02.28");
+  } else {
+    const meta = trichXuatMeta(text);
+    const dNsx = phanTichNgayVN(meta.nsx);
+    const dHd = phanTichNgayVN(meta.hd);
+    if (dNsx && dHd) {
+      if (dHd.date <= dNsx.date) {
+        loiCM.push(`[Logic Ngày SX - Hạn Dùng] Hạn dùng (${meta.hd}) nhỏ hơn hoặc bằng Ngày sản xuất (${meta.nsx}).`);
+        tuKhoaHighlight.push(meta.nsx, meta.hd);
+      } else if (dNsx.m === dHd.m && dNsx.d !== dHd.d && Math.abs(dNsx.d - dHd.d) > 1) {
+        loiCM.push(`[Cảnh Báo Lệch Ngày SX - Hạn Dùng] Ngày sản xuất (${meta.nsx}) và Hạn dùng (${meta.hd}) cùng tháng nhưng lệch ngày (${dNsx.d} so với ${dHd.d}); cần kiểm tra lại nhãn gốc.`);
+        tuKhoaHighlight.push(meta.nsx, meta.hd);
+      }
+    }
+  }
+
+  // G. Kiểm tra Phân loại mẫu
+  if ((text.includes("LMP") || text.includes("CBMP")) && text.includes("biên bản lấy mẫu thuốc")) {
+    loiCM.push(`[Sai Phân Loại Mẫu] Mẫu Mỹ phẩm (CBMP/LMP) nhưng Yêu cầu kiểm nghiệm ghi "biên bản lấy mẫu thuốc".`);
+    tuKhoaHighlight.push("biên bản lấy mẫu thuốc");
+  }
+  if ((text.includes("LTP") || text.includes("ĐKSP")) && text.includes("biên bản lấy mẫu thuốc")) {
+    loiCM.push(`[Sai Phân Loại Mẫu] Mẫu Thực phẩm BVSK (ĐKSP/LTP) nhưng Yêu cầu kiểm nghiệm ghi "biên bản lấy mẫu thuốc".`);
+    tuKhoaHighlight.push("biên bản lấy mẫu thuốc");
+  }
+
+  // H. Kiểm tra mâu thuẫn Không đạt trong bảng nhưng Kết luận Đạt
+  if (/(?:^|[\s:;,.(\[])Không đạt(?:$|[\s:;,.!\)\]])/i.test(text) && /Kết luận\s*:[\s\S]{0,180}(?:^|[\s:;,.(\[])đạt tiêu chuẩn/i.test(text) && !/Kết luận\s*:[\s\S]{0,180}(?:^|[\s:;,.(\[])không đạt/i.test(text)) {
+    loiCM.push(`[Mâu Thuẫn Kết Luận Tổng Thể] Trong phiếu xuất hiện cụm từ "Không đạt" nhưng phần Kết luận cuối phiếu vẫn ghi "đạt tiêu chuẩn".`);
+    tuKhoaHighlight.push("Không đạt");
+  }
+
+  loiCM._highlights = tuKhoaHighlight;
+  return loiCM;
+}
+
+// ================= 2. BỘ KIỂM TRA HÀNH CHÍNH, BAN GIÁM ĐỐC & CHÍNH TẢ =================
+function kiemTraHanhChinhVaChinhTa(rawText) {
+  const text = chuanHoa(rawText);
+  let loiHC = [];
+  let tuKhoaHighlight = [];
+
+  // A. Rác trộn thư Mail Merge & Ngày Excel
+  const racMerge = ["MERGEFIELD", "_sản_xuất", "sản_xuất", "_xuất", "ạn_dùng", "giao_mẫu", "Nơi_lấy_gửi_mẫu", "ĐƠN_VỊ_SX", "Địa_chỉ4", "Số Số:", "X VD-", "ng 151027"];
+  racMerge.forEach(tu => {
+    if (text.includes(tu)) {
+      loiHC.push(`[Lỗi Trộn Thư] Dính ký tự thừa "${tu}" chưa xóa.`);
+      tuKhoaHighlight.push(tu);
+    }
+  });
+  
+  const maNgayExcel = text.match(/\b(45\d{3}|46\d{3})\b/g);
+  if (maNgayExcel) {
+    loiHC.push(`[Lỗi Ngày Excel] Ngày lấy/nhận mẫu bị nhảy thành số serial Excel: ${maNgayExcel.join(", ")}.`);
+    tuKhoaHighlight.push(...maNgayExcel);
+  }
+
+  if (/ngày\s*\(\s*Số:/i.test(text) || /xác định chất lượng\s*\(\s*Số:/i.test(text)) {
+    loiHC.push(`[Thiếu Ngày Lấy Mẫu] Bỏ trống ngày lấy mẫu trước cụm từ "(Số: ... /QĐ-".`);
+  }
+
+  // B. Kiểm tra Ban Giám Đốc Mới, Ngày ký & Đơn vị
+  const coBGDMoi = text.includes("Trần Quốc Lộc") || text.includes("Nguyễn Thanh Phong") || text.includes("Đặng Lê Hoài Linh");
+  if (!coBGDMoi) {
+    if (text.includes("Nguyễn Hữu Khai")) {
+      loiHC.push(`[Cập Nhật Ban Giám Đốc] Phiếu đang ghi tên người ký cũ ("Nguyễn Hữu Khai"). Cần cập nhật theo Ban Giám Đốc mới: Giám đốc Trần Quốc Lộc, Phó Giám đốc Nguyễn Thanh Phong, Phó Giám đốc Đặng Lê Hoài Linh.`);
+      tuKhoaHighlight.push("Nguyễn Hữu Khai");
+    } else {
+      loiHC.push(`[Thiếu Họ Tên Ban Giám Đốc] Cuối phiếu chỉ ghi chức danh "GIÁM ĐỐC" nhưng bỏ trống họ tên người ký (Chuẩn: Giám đốc Trần Quốc Lộc / Phó Giám đốc Nguyễn Thanh Phong, Đặng Lê Hoài Linh).`);
+    }
+  }
+
+  if (/ngày\s+tháng\s+năm\s+202\d/i.test(text)) {
+    loiHC.push(`[Thiếu Ngày Tháng Ký] Dòng "Đắk Lắk, ngày ... tháng ... năm ..." ở cuối phiếu đang bỏ trống ngày và tháng.`);
+  }
+  if (text.includes("0107/QĐ-KNĐL") && text.includes("ngày 15 tháng 08 năm 2025")) {
+    loiHC.push(`[Sai Ngày Quyết Định] Quyết định 0107/QĐ-KNĐL ban hành ngày 13/08/2025, nhưng trong phiếu đang ghi nhầm thành 15/08/2025.`);
+    tuKhoaHighlight.push("ngày 15 tháng 08 năm 2025");
+  }
+  if (!text.toUpperCase().includes("SỞ Y TẾ ĐẮK LẮK")) {
+    loiHC.push(`[Sai Cơ Quan Chủ Quản] Thiếu hoặc sai tên "SỞ Y TẾ ĐẮK LẮK".`);
+  }
+  if (!text.toUpperCase().includes("TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM")) {
+    loiHC.push(`[Sai Tên Đơn Vị] Thiếu hoặc sai tên "TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM".`);
+  }
+  if (text.toUpperCase().includes("SỞ Y TẾ PHÚ YÊN")) {
+    loiHC.push(`[Dư Tiêu Đề Cũ] Còn sót dòng chữ "SỞ Y TẾ PHÚ YÊN" ở đầu trang.`);
+    tuKhoaHighlight.push("SỞ Y TẾ PHÚ YÊN");
+  }
+  if (text.includes("Trung tâm kiểm nghiệm Phú yên")) {
+    loiHC.push(`[Lỗi Chân Trang] Ghi chú cuối trang vẫn ghi "Trung tâm kiểm nghiệm Phú yên" (chưa đổi thành Trung tâm kiểm nghiệm Đắk Lắk).`);
+    tuKhoaHighlight.push("Trung tâm kiểm nghiệm Phú yên");
+  }
+
+  // C. Từ điển lỗi chính tả, đánh máy & công thức hóa học (Mặc định + Tùy chỉnh)
+  const danhSachTuDien = [...TU_DIEN_MAC_DINH, ...tuDienTuyChinh];
+  danhSachTuDien.forEach(item => {
+    if (item.sai && text.includes(item.sai)) {
+      loiHC.push(`[Lỗi Chính Tả / Đánh Máy] Phát hiện "${item.sai}" -> Sửa thành: "${item.dung}".`);
+      tuKhoaHighlight.push(item.sai);
+    }
+  });
+
+  loiHC._highlights = tuKhoaHighlight;
+  return loiHC;
+}
+
+// ================= ĐỌC FILE PDF & WORD (.DOCX, .DOC) TRỰC TIẾP =================
+async function docNoiDungPDF(file) {
+  if (!window.pdfjsLib) throw new Error("Không tải được thư viện PDF.js. Hãy kiểm tra kết nối mạng hoặc dùng tệp DOCX.");
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  if (file.size > 100 * 1024 * 1024) throw new Error("Tệp vượt giới hạn xử lý 100 MB của phiên bản này.");
+  const arrayBuffer = await file.arrayBuffer();
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdfDoc = await loadingTask.promise;
+  if (pdfDoc.numPages > 300) throw new Error("PDF có hơn 300 trang, vượt giới hạn xử lý của phiên bản này.");
+  let fullText = "";
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const textContent = await page.getTextContent();
+    const items = textContent.items.slice().sort((a, b) => {
+      const ay = (a.transform && a.transform[5]) || 0;
+      const by = (b.transform && b.transform[5]) || 0;
+      if (Math.abs(by - ay) > 3.5) return by - ay;
+      const ax = (a.transform && a.transform[4]) || 0;
+      const bx = (b.transform && b.transform[4]) || 0;
+      return ax - bx;
+    });
+    let pageLines = [];
+    let currentLine = [];
+    let lastY = null;
+    for (const item of items) {
+      const y = (item.transform && item.transform[5]) || 0;
+      if (lastY !== null && Math.abs(lastY - y) > 3.5) {
+        pageLines.push(currentLine.join(" "));
+        currentLine = [];
+      }
+      currentLine.push(item.str || "");
+      lastY = y;
+    }
+    if (currentLine.length) pageLines.push(currentLine.join(" "));
+    fullText += pageLines.join("\n") + "\n";
+  }
+  return fullText;
+}
+
+function giaiMaFileDoc(arrayBuffer) {
+  const bytes = new Uint8Array(arrayBuffer);
+  let utf16 = "";
+  for (let i = 0; i < bytes.length - 1; i += 2) {
+    const code = (bytes[i + 1] << 8) | bytes[i];
+    if ((code >= 32 && code <= 126) || (code >= 160 && code <= 8230) || code === 13 || code === 10 || code === 9) {
+      utf16 += String.fromCharCode(code);
+    } else if (utf16.length > 0 && utf16[utf16.length - 1] !== " ") {
+      utf16 += " ";
+    }
+  }
+  const clean = utf16.replace(/\s{3,}/g, "\n").trim();
+  const idx = clean.toUpperCase().indexOf("SỞ Y TẾ");
+  return idx !== -1 ? clean.substring(idx) : clean;
+}
+
+async function docNoiDungWord(file) {
+  const ten = file.name.toLowerCase();
+  if (file.size > 100 * 1024 * 1024) throw new Error("Tệp vượt giới hạn xử lý 100 MB của phiên bản này.");
+  const buf = await file.arrayBuffer();
+  if (ten.endsWith(".docx")) {
+    if (!window.mammoth) throw new Error("Không tải được thư viện đọc DOCX (Mammoth). Hãy kiểm tra kết nối mạng.");
+    const result = await mammoth.extractRawText({ arrayBuffer: buf });
+    return result.value || "";
+  }
+  if (ten.endsWith(".doc")) {
+    const extracted = giaiMaFileDoc(buf);
+    if (extracted && extracted.length > 50 && /kiểm nghiệm|mẫu|tiêu chuẩn/i.test(extracted)) {
+      return extracted;
+    }
+    throw new Error("Định dạng .doc cũ này có cấu trúc mã hóa không thể giải mã trực tiếp. Vui lòng mở bằng Word và lưu thành .docx hoặc PDF.");
+  }
+  throw new Error("Định dạng file không được hỗ trợ.");
+}
+
+// ================= ÂM BÁO & XỬ LÝ DANH SÁCH FILE =================
+function phatTiengBip() {
+  if (!batAmBao) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+  } catch (e) {}
+}
+
+async function quetDanhSachFile(files) {
+  if (!files || !files.length) return;
+  const danhSach = Array.from(files);
+  for (const file of danhSach) {
+    await xuLyMotFile(file);
+  }
+  locBang();
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput) fileInput.value = "";
+}
+
+function luuHoacCapNhatKetQua(ketQua) {
+  const idx = danhSachKetQua.findIndex(x => x.fileName === ketQua.fileName);
+  if (idx >= 0) {
+    const cu = danhSachKetQua[idx];
+    if (cu.tr && cu.tr !== ketQua.tr && cu.tr.parentNode) cu.tr.parentNode.removeChild(cu.tr);
+    danhSachKetQua[idx] = { ...cu, ...ketQua };
+  } else {
+    danhSachKetQua.push(ketQua);
+  }
+  dongBoDuLieuCSV();
+  capNhatKPI();
+}
+
+function dongBoDuLieuCSV() {
+  duLieuCSV = [["STT", "Tên File", "Số Phiếu", "Số ĐK", "Số Lô", "Ngày SX - Hạn Dùng", "Tên Mẫu", "Thời điểm quét", "Trạng thái kiểm tra tự động", "Cảnh báo chuyên môn / số liệu", "Cảnh báo hành chính / chính tả", "Giới hạn"]];
+  danhSachKetQua.forEach((x, i) => {
+    const status = x.readError ? "CHƯA ĐỦ DỮ LIỆU / LỖI ĐỌC" : (x.coLoi ? "CÓ CẢNH BÁO - CẦN XEM XÉT" : "CHƯA PHÁT HIỆN LỖI THEO QUY TẮC");
+    const nsxHd = [x.nsx ? `NSX: ${x.nsx}` : "", x.hd ? `HD: ${x.hd}` : ""].filter(Boolean).join(" | ");
+    duLieuCSV.push([
+      i + 1,
+      x.fileName,
+      x.soPhieu || "",
+      x.soDK || "",
+      x.soLo || "",
+      nsxHd,
+      x.tenMau || "",
+      x.ngayKiemTra || "",
+      status,
+      (x.loiCM || []).join(" | "),
+      (x.loiHC || []).join(" | "),
+      "Không phải kết luận đạt chuẩn; cần người có chuyên môn xác minh"
+    ]);
+  });
+}
+
+function ganDongSTT() {
+  danhSachKetQua.forEach((x, i) => {
+    if (x.tr && x.tr.cells[0]) x.tr.cells[0].innerText = i + 1;
+  });
+}
+
+async function xuLyMotFile(file, rawTextOverride = null) {
+  const tenFile = file.name || "(không tên)";
+  const emptyRow = document.getElementById("emptyRow");
+  if (emptyRow) emptyRow.style.display = "none";
+
+  let itemCu = danhSachKetQua.find(x => x.fileName === tenFile);
+  let tr = itemCu && itemCu.tr ? itemCu.tr : document.createElement("tr");
+  if (!itemCu) {
+    tr.innerHTML = `<td></td><td><b>${escapeHtml(tenFile)}</b></td><td class="tag-ok">⏳ Đang kiểm tra...</td><td>Đang trích xuất văn bản và chạy các quy tắc cục bộ...</td>`;
+    document.getElementById("tbody").prepend(tr);
+  } else {
+    tr.cells[2].className = "tag-ok";
+    tr.cells[2].innerText = "⏳ Đang kiểm tra lại...";
+    tr.cells[3].innerText = "Tệp đã tồn tại trong danh sách; đang cập nhật kết quả mới...";
+  }
+
+  const ext = tenFile.toLowerCase();
+  let textDoc = "";
+  let laDocCu = ext.endsWith(".doc");
+
+  try {
+    if (rawTextOverride !== null) {
+      textDoc = rawTextOverride;
+    } else if (ext.endsWith(".pdf")) {
+      textDoc = await docNoiDungPDF(file);
+    } else {
+      textDoc = await docNoiDungWord(file);
+    }
+  } catch (e) {
+    const msg = e && e.message ? e.message : "Không xác định được lỗi đọc tệp.";
+    tr.cells[1].innerHTML = `<b>${escapeHtml(tenFile)}</b>`;
+    tr.cells[2].className = "tag-err";
+    tr.cells[2].innerText = "❌ Lỗi đọc tệp";
+    tr.cells[3].innerHTML = `<div class="fast-err">${escapeHtml(msg)}<br><b>Trạng thái:</b> Chưa đủ dữ liệu để kiểm tra; không được hiểu là phiếu có lỗi chuyên môn đã xác định.</div>`;
+    luuHoacCapNhatKetQua({
+      coLoi: true, readError: true, fileName: tenFile,
+      ngayKiemTra: new Date().toLocaleString("vi-VN"),
+      soPhieu: "", soDK: "", soLo: "", nsx: "", hd: "", tenMau: "",
+      loiCM: [msg], loiHC: [], rawText: "", highlights: [], tr
+    });
+    ganDongSTT();
+    return;
+  }
+
+  if (!chuanHoa(textDoc)) {
+    const msg = ext.endsWith(".pdf")
+      ? "Không trích xuất được văn bản. Có thể PDF là bản scan ảnh hoặc tệp không có lớp chữ; cần OCR bằng công cụ được đơn vị cho phép rồi kiểm tra lại."
+      : "Không trích xuất được nội dung có thể kiểm tra từ tệp này.";
+    tr.cells[1].innerHTML = `<b>${escapeHtml(tenFile)}</b>`;
+    tr.cells[2].className = "tag-err";
+    tr.cells[2].innerText = "⚠️ Chưa thể kiểm tra";
+    tr.cells[3].innerHTML = `<div class="fast-err">${escapeHtml(msg)}</div>`;
+    luuHoacCapNhatKetQua({
+      coLoi: true, readError: true, fileName: tenFile,
+      ngayKiemTra: new Date().toLocaleString("vi-VN"),
+      soPhieu: "", soDK: "", soLo: "", nsx: "", hd: "", tenMau: "",
+      loiCM: [msg], loiHC: [], rawText: "", highlights: [], tr
+    });
+    ganDongSTT();
+    return;
+  }
+
+  const textNorm = chuanHoa(textDoc);
+  const meta = trichXuatMeta(textNorm);
+  const loiCM = kiemTraChuyenMonVaDuocDien(textNorm);
+  const loiHC = kiemTraHanhChinhVaChinhTa(textNorm);
+  if (laDocCu && rawTextOverride === null) {
+    loiHC.push(`[Lưu Ý Định Dạng .DOC Cũ] Tệp .doc nhị phân được đọc ở chế độ tương thích; khuyến nghị lưu sang .docx hoặc .pdf để đảm bảo chính xác 100% với bảng biểu.`);
+  }
+
+  const highlights = [...new Set([...(loiCM._highlights || []), ...(loiHC._highlights || [])])];
+  const tongLoi = loiCM.length + loiHC.length;
+
+  let htmlKetQua = "";
+  if (loiCM.length) {
+    htmlKetQua += `<div class="ddvn-err"><b>⚕️ CẢNH BÁO TỪ QUY TẮC CHUYÊN MÔN / SỐ LIỆU (${loiCM.length}):</b><br>• ` + loiCM.map(escapeHtml).join("<br>• ") + `</div>`;
+  }
+  if (loiHC.length) {
+    htmlKetQua += `<div class="fast-err"><b>📝 CẢNH BÁO HÀNH CHÍNH / CHÍNH TẢ (${loiHC.length}):</b><br>• ` + loiHC.map(escapeHtml).join("<br>• ") + `</div>`;
+  }
+
+  const safeFileAttr = escapeHtml(tenFile);
+  tr.cells[1].innerHTML =
+    `<div style="font-weight:bold;color:#0b5394">📄 ${safeFileAttr}</div>` +
+    (meta.tenMau ? `<div style="font-size:12.5px;margin-top:3px"><b>Mẫu:</b> ${escapeHtml(meta.tenMau)}</div>` : "") +
+    `<div style="margin-top:3px">` +
+      (meta.soPhieu ? `<span class="meta-tag">Số phiếu: ${escapeHtml(meta.soPhieu)}</span>` : "") +
+      (meta.soDK ? `<span class="meta-tag">SĐK: ${escapeHtml(meta.soDK)}</span>` : "") +
+      (meta.soLo ? `<span class="meta-tag">Lô: ${escapeHtml(meta.soLo)}</span>` : "") +
+      (meta.nsx ? `<span class="meta-tag">NSX: ${escapeHtml(meta.nsx)}</span>` : "") +
+      (meta.hd ? `<span class="meta-tag">HD: ${escapeHtml(meta.hd)}</span>` : "") +
+    `</div>` +
+    `<div class="no-print" style="margin-top:7px;">` +
+      `<button type="button" class="btn btn-outline btn-sm" data-view-file="${safeFileAttr}" onclick="xemVanBanTheoTen(this.getAttribute('data-view-file'))">👁️ Xem văn bản &amp; vị trí lỗi</button>` +
+    `</div>`;
+
+  const coLoi = tongLoi > 0;
+  if (coLoi) {
+    tr.cells[2].className = "tag-err";
+    tr.cells[2].innerText = `⚠️ Cần xem xét (${tongLoi})`;
+    tr.cells[3].innerHTML = htmlKetQua + `<div class="note-limit"><b>Giới hạn:</b> Đây là cảnh báo do quy tắc cục bộ phát hiện; cần đối chiếu phiếu gốc, tiêu chuẩn áp dụng và tài liệu có hiệu lực.</div>`;
+    phatTiengBip();
+  } else {
+    tr.cells[2].className = "tag-ok";
+    tr.cells[2].innerText = "ℹ️ Chưa phát hiện lỗi";
+    tr.cells[3].innerHTML = `<div class="unit-info" style="margin-bottom:0"><b>Không có cảnh báo nào được kích hoạt trong bộ quy tắc hiện có.</b> Điều này không chứng minh phiếu đạt DĐVN, TCCS hoặc ISO/IEC 17025. Cần người có chuyên môn kiểm tra lại toàn bộ phiếu và tiêu chuẩn áp dụng.</div>`;
+  }
+
+  luuHoacCapNhatKetQua({
+    coLoi, readError: false, fileName: tenFile,
+    ngayKiemTra: new Date().toLocaleString("vi-VN"),
+    soPhieu: meta.soPhieu, soDK: meta.soDK, soLo: meta.soLo, nsx: meta.nsx, hd: meta.hd, tenMau: meta.tenMau,
+    loiCM, loiHC, rawText: textDoc, highlights, tr
+  });
+  ganDongSTT();
+}
+
+// ================= LỌC BẢNG & XEM VĂN BẢN TRÍCH XUẤT =================
+function chonBoLoc(loai) {
+  boLocHienTai = loai;
+  document.getElementById("filterAll").classList.toggle("active-filter", loai === "ALL");
+  document.getElementById("filterErr").classList.toggle("active-filter", loai === "ERR");
+  document.getElementById("filterOk").classList.toggle("active-filter", loai === "OK");
+  locBang();
+}
+
+function locBang() {
+  const kw = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+  danhSachKetQua.forEach(item => {
+    if (!item.tr) return;
+    let khopBoLoc = true;
+    if (boLocHienTai === "ERR") khopBoLoc = item.coLoi;
+    else if (boLocHienTai === "OK") khopBoLoc = !item.coLoi;
+
+    const textRow = item.tr.innerText.toLowerCase();
+    const khopTuKhoa = !kw || textRow.includes(kw);
+    item.tr.style.display = (khopBoLoc && khopTuKhoa) ? "" : "none";
+  });
+}
+
+function xemVanBanTheoTen(fileName) {
+  const item = danhSachKetQua.find(x => x.fileName === fileName);
+  if (!item) return;
+  document.getElementById("textModalTitle").innerText = `📄 Văn bản trích xuất: ${item.fileName}`;
+  let htmlText = escapeHtml(item.rawText || "(Không có văn bản)");
+  const kws = (item.highlights || []).filter(k => k && k.length >= 2);
+  kws.sort((a, b) => b.length - a.length);
+  kws.forEach(kw => {
+    const safeKw = escapeHtml(kw).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const reg = new RegExp(`(${safeKw})`, "gi");
+    htmlText = htmlText.replace(reg, `<mark class="hl-err">$1</mark>`);
+  });
+  document.getElementById("textModalContent").innerHTML = htmlText;
+  document.getElementById("textModal").classList.add("open");
+}
+
+function dongModalVanBan() {
+  document.getElementById("textModal").classList.remove("open");
+}
+
+// ================= QUẢN LÝ TỪ ĐIỂN TÙY CHỈNH =================
+function moModalTuDien() {
+  veDanhSachTuDien();
+  document.getElementById("ruleModal").classList.add("open");
+}
+
+function dongModalTuDien() {
+  document.getElementById("ruleModal").classList.remove("open");
+}
+
+function veDanhSachTuDien() {
+  const box = document.getElementById("customRuleList");
+  if (!box) return;
+  let html = "";
+  tuDienTuyChinh.forEach((item, idx) => {
+    html += `<div class="custom-rule-item" style="background:#f0fdf4">
+      <div><b>[Tùy chỉnh]</b> Sai: <code style="color:#b91c1c">${escapeHtml(item.sai)}</code> &rarr; Đúng: <b style="color:#15803d">${escapeHtml(item.dung)}</b></div>
+      <button type="button" class="btn btn-gray btn-sm" onclick="xoaTuDienTuyChinh(${idx})">Xóa</button>
+    </div>`;
+  });
+  TU_DIEN_MAC_DINH.forEach(item => {
+    html += `<div class="custom-rule-item">
+      <div><span style="color:#64748b">[Mặc định]</span> Sai: <code style="color:#b91c1c">${escapeHtml(item.sai)}</code> &rarr; Đúng: <b>${escapeHtml(item.dung)}</b></div>
+    </div>`;
+  });
+  box.innerHTML = html;
+}
+
+function themTuDienTuyChinh() {
+  const inpSai = document.getElementById("inputTuSai");
+  const inpDung = document.getElementById("inputTuDung");
+  const sai = (inpSai.value || "").trim();
+  const dung = (inpDung.value || "").trim();
+  if (!sai || !dung) {
+    hienThongBao("Vui lòng nhập đầy đủ cụm từ sai và gợi ý sửa đúng.", "warn");
+    return;
+  }
+  tuDienTuyChinh.unshift({ sai, dung });
+  luuTuDienTuyChinh();
+  inpSai.value = "";
+  inpDung.value = "";
+  veDanhSachTuDien();
+  hienThongBao(`Đã thêm quy tắc bắt lỗi "${sai}" vào bộ nhớ trình duyệt.`, "ok");
+}
+
+function xoaTuDienTuyChinh(idx) {
+  tuDienTuyChinh.splice(idx, 1);
+  luuTuDienTuyChinh();
+  veDanhSachTuDien();
+}
+
+// ================= NẠP BỘ PHIẾU MẪU THỬ NGHIỆM =================
+async function napBoPhieuMau() {
+  const mau1 = `SỞ Y TẾ ĐẮK LẮK
+TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM
+PHIẾU KIỂM NGHIỆM Số: 437/KN-ĐL
+Số đăng ký kiểm nghiệm: KN0437/25
+Mẫu để kiểm nghiệm: Viên nang cứng PIRACETAM 400mg Tên khoa học: Piracetam
+Cơ sở sản xuất: Công ty CP Dược phẩm Mẫu
+Số lô SX: 040225 Ngày sản xuất: 18.02.25 Hạn dùng: 10.02.28
+Nơi_lấy_gửi_mẫu: Trung tâm Y tế huyện
+Tiêu chuẩn áp dụng: DĐVN V và DĐVN VI
+1. Tính chất: Viên nang cứng, bột thuốc màu xanh-xanh. Đạt
+2. Độ đồng đều khối lượng: Tính theo khối lượng trung binhg. Đúng (± 7,5%)
+3. Độ hòa tan (PL 11.4): Không nhỏ hơn 75,0%. Đạt (122,2%)
+4. Định tính: Chế phẩm phải cho phép thử định tính của piracetam.
+5. Định lượng: Từ 95,0% đến 105,0% so với khối lượng ghi trên nhãn. Đạt (99,4%)
+Kết luận: Mẫu đạt tiêu chuẩn theo DĐVN V.
+Đắk Lắk, ngày tháng năm 2026
+GIÁM ĐỐC
+Nguyễn Hữu Khai`;
+
+  const mau2 = `SỞ Y TẾ PHÚ YÊN
+TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM
+PHIẾU KIỂM NGHIỆM Số: 441/KN-ĐL
+Số đăng ký kiểm nghiệm: KN0441/25
+Mẫu để kiểm nghiệm: Viên nang cứng VITAMIN C Tên khoa học: Acid ascorbic
+Cơ sở sản xuất: Công ty Dược phẩm B
+Số lô SX: 110525 Ngày sản xuất: 12/05/2025 Hạn dùng: 12/05/2028
+Ngày nhận mẫu: 45890 (Theo Quyết định 0107/QĐ-KNĐL ngày 15 tháng 08 năm 2025)
+Tiêu chuẩn áp dụng: TCCS
+1. Tính chất: Viên rắn đồng nhất. Đạt
+2. Định tính Ascorbic acid bằng Phương Pháp sắc ký KSLM: Đúng
+3. Định lượng Acid ascorbic: Yêu cầu 10mg/viên ± 20% (từ 90,0% đến 110,0%). Kết quả: Đạt (46,89%)
+Kết luận: Mẫu đáp ứng yêu cầu chất lượng theo DĐVN V.
+Đắk Lắk, ngày 15 tháng 10 năm 2026
+GIÁM ĐỐC`;
+
+  const mau3 = `SỞ Y TẾ ĐẮK LẮK
+TRUNG TÂM KIỂM NGHIỆM THUỐC, MỸ PHẨM, THỰC PHẨM
+PHIẾU KIỂM NGHIỆM Số: 458/KN-ĐL
+Số đăng ký kiểm nghiệm: KN0458/26
+Mẫu để kiểm nghiệm: Viên nén PARACETAMOL 500mg Tên khoa học: Paracetamol
+Cơ sở sản xuất: Công ty Cổ phần Dược phẩm Đắk Lắk
+Số lô SX: 260108 Ngày sản xuất: 15/01/2026 Hạn dùng: 15/01/2029
+Tiêu chuẩn áp dụng: DĐVN V
+1. Tính chất: Viên nén màu trắng, hai mặt nhẵn, không mùi. Kết quả: Đúng
+2. Độ đồng đều khối lượng (PL 11.3 DĐVN V): Chênh lệch ± 5%. Kết quả: Đạt
+3. Độ hòa tan (PL 11.4 DĐVN V): Không dưới 75,0% sau 45 phút. Kết quả: Đạt (94,5%)
+4. Định tính: Phổ hồng ngoại và SKLM phù hợp với chuẩn Paracetamol. Kết quả: Đúng
+5. Định lượng: Hàm lượng Paracetamol từ 95,0% đến 105,0% so với hàm lượng ghi trên nhãn. Kết quả: Đạt (99,8%)
+Kết luận: Mẫu kiểm nghiệm đạt yêu cầu chất lượng các chỉ tiêu đã thử theo DĐVN V.
+Đắk Lắk, ngày 17 tháng 10 năm 2026
+GIÁM ĐỐC
+Trần Quốc Lộc`;
+
+  await xuLyMotFile({ name: "Phieu_437_Piracetam_Mau_Loi_Bo_Sot.pdf" }, mau1);
+  await xuLyMotFile({ name: "Phieu_441_VitaminC_Mau_Loi_Dinh_Luong.docx" }, mau2);
+  await xuLyMotFile({ name: "Phieu_458_Paracetamol_500mg_Chuan.pdf" }, mau3);
+  locBang();
+  hienThongBao("Đã nạp 3 phiếu mẫu thử nghiệm để kiểm tra đầy đủ các nhóm quy tắc.", "ok");
+}
+
+// ================= CHẾ ĐỘ 2: TỰ ĐỘNG CANH GÁC THƯ MỤC =================
+async function batTatCanhGacThuMuc() {
+  if (watchTimer) {
+    clearInterval(watchTimer);
+    watchTimer = null;
+    document.getElementById("watchBox").className = "watch-zone";
+    document.getElementById("watchTitle").innerText = "📡 CHẾ ĐỘ 2: TỰ ĐỘNG CANH GÁC THƯ MỤC LƯU PHIẾU";
+    document.getElementById("watchDesc").innerText = "Đã dừng canh gác. Bấm lại để chọn thư mục.";
+    hienThongBao("Đã dừng chế độ tự động canh gác thư mục.", "info");
+    return;
+  }
+  if (!window.showDirectoryPicker) {
+    hienThongBao("Trình duyệt hoặc khung xem hiện tại không hỗ trợ chọn thư mục trực tiếp. Vui lòng mở file trên Chrome/Edge hoặc dùng CHẾ ĐỘ 1 bên trái.", "warn");
+    return;
+  }
+  try {
+    dirHandle = await window.showDirectoryPicker();
+    document.getElementById("watchBox").className = "watch-zone active";
+    document.getElementById("watchTitle").innerText = "🟢 ĐANG CANH GÁC THƯ MỤC: " + dirHandle.name;
+    document.getElementById("watchDesc").innerText = "Cứ lưu file PDF hoặc Word mới vào thư mục này là tự động quét! (Bấm để dừng)";
+    hienThongBao("Đang canh gác thư mục: " + dirHandle.name, "ok");
+
+    const quetNgam = async () => {
+      if (dangQuetThuMuc || !dirHandle) return;
+      dangQuetThuMuc = true;
+      try {
+        for await (const entry of dirHandle.values()) {
+          if (entry.kind === "file" && /\.(pdf|doc|docx)$/i.test(entry.name) && !entry.name.startsWith("~$")) {
+            const file = await entry.getFile();
+            const fileKey = `${file.name}|${file.lastModified}|${file.size}`;
+            if (daQuetMap.get(file.name) !== fileKey) {
+              await xuLyMotFile(file);
+              daQuetMap.set(file.name, fileKey);
+            }
+          }
+        }
+      } catch (e) {
+        document.getElementById("watchDesc").innerText = "Không thể đọc thư mục. Hãy kiểm tra quyền truy cập và chọn lại thư mục nếu cần.";
+      } finally {
+        dangQuetThuMuc = false;
+      }
+    };
+    await quetNgam();
+    watchTimer = setInterval(quetNgam, 3000);
+  } catch (e) {
+    if (e && e.name !== "AbortError") {
+      hienThongBao("Không thể mở hộp thoại chọn thư mục trong khung nhúng. Bạn có thể kéo thả nhiều file cùng lúc vào Chế độ 1.", "warn");
+    }
+  }
+}
+
+// ================= XUẤT BÁO CÁO CSV & LÀM MỚI =================
+function xuatBaoCaoCSV() {
+  if (!danhSachKetQua.length) {
+    hienThongBao("Danh sách đang trống. Hãy quét ít nhất 1 phiếu kiểm nghiệm trước khi xuất CSV.", "warn");
+    return;
+  }
+  let csv = "\uFEFF" + duLieuCSV.map(r => r.map(c => {
+    let value = String(c ?? "");
+    if (/^[=+@\-\t\r]/.test(value)) value = "'" + value;
+    return `"${value.replace(/"/g, '""')}"`;
+  }).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+  a.download = "BAO_CAO_KIEM_DUYET_PHIEU_KN.csv";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  hienThongBao("Đã xuất báo cáo BAO_CAO_KIEM_DUYET_PHIEU_KN.csv thành công.", "ok");
+}
+
+function xoaBang() {
+  if (watchTimer) {
+    clearInterval(watchTimer);
+    watchTimer = null;
+  }
+  dirHandle = null;
+  dangQuetThuMuc = false;
+  const watchBox = document.getElementById("watchBox");
+  if (watchBox) watchBox.className = "watch-zone";
+  const watchTitle = document.getElementById("watchTitle");
+  const watchDesc = document.getElementById("watchDesc");
+  if (watchTitle) watchTitle.innerText = "📡 CHẾ ĐỘ 2: TỰ ĐỘNG CANH GÁC THƯ MỤC LƯU PHIẾU";
+  if (watchDesc) watchDesc.innerText = "Đã làm mới danh sách và dừng canh gác. Bấm để chọn lại thư mục.";
+  document.getElementById("tbody").innerHTML = `<tr id="emptyRow"><td colspan="4" class="empty-state">Chưa có phiếu kiểm nghiệm nào được nạp. Hãy <b>chọn hoặc kéo thả tệp PDF/DOCX/DOC</b> vào khung bên trên, hoặc bấm <b>"🧪 Nạp 3 Phiếu Mẫu Thử Nghiệm"</b> để kiểm tra thử nghiệm bộ quy tắc.</td></tr>`;
+  stt = 0; countErr = 0; countOk = 0;
+  danhSachKetQua = [];
+  dongBoDuLieuCSV();
+  daQuetMap.clear();
+  document.getElementById("searchInput").value = "";
+  chonBoLoc("ALL");
+  capNhatKPI();
+  hienThongBao("Đã làm mới toàn bộ bảng rà soát.", "info");
+}
+
+function khoiTaoUngDung() {
+  if (window.pdfjsLib && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  taiTuDienTuyChinh();
+  const dz = document.querySelector(".card-zone");
+  if (dz && !dz._bound) {
+    dz._bound = true;
+    dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("dragover"); });
+    dz.addEventListener("dragleave", () => dz.classList.remove("dragover"));
+    dz.addEventListener("drop", e => {
+      e.preventDefault();
+      dz.classList.remove("dragover");
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        quetDanhSachFile(e.dataTransfer.files);
+      }
+    });
+  }
+}
+khoiTaoUngDung();
+window.onload = khoiTaoUngDung;
+</script>
+</body>
+</html>
